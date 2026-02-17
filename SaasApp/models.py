@@ -51,3 +51,71 @@ class Membership(models.Model):
         
     def __str__(self):
         return f"{self.user.email}-{self.organization.name}({self.role})"
+    
+    
+class Projects(models.Model):
+    name=models.CharField(max_length=255)
+    description=models.TextField(blank=True,null=True)
+        
+    organization=models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name='projects'
+    )
+        
+    created_at=models.DateTimeField(auto_now_add=True)
+        
+        
+    def __str__(self):
+        return f"{self.name}({self.organization.name})"
+        
+class Task(models.Model):
+        STATUS_CHOICES=[
+            ("NEW","new"),
+            ("IN_PROGRESS", 'in progress'),
+            ("DONE",'done'),
+        ]
+            
+        PRIORITY_CHOICES=[
+            ("LOW",'low'),
+            ('MEDIUM','medium'),
+            ('HIGH','high'),
+        ]
+            
+        title=models.CharField(max_length=255)
+        description=models.TextField(blank=True,null=True)
+            
+            
+        project=models.ForeignKey(
+            Projects,
+            on_delete=models.CASCADE,
+            related_name='tasks'
+        )
+        
+        
+        assigned_to=models.ManyToManyField(
+            User,
+            related_name='assigned_tasks',
+            blank=True
+        )
+        
+        status=models.CharField(
+            max_length=20,
+            choices=STATUS_CHOICES,
+            default='NEW',
+        )
+        
+        priority=models.CharField(
+            max_length=20,
+            choices=PRIORITY_CHOICES,
+            default='MEDIUM',
+        )
+        
+        due_date=models.DateField(blank=True,null=True)
+        
+        created_at=models.DateTimeField(auto_now_add=True)
+        
+        def __str__(self):
+            return f"{self.title}({self.project.name})"
+        
+        
