@@ -68,6 +68,11 @@ class Projects(models.Model):
         
     def __str__(self):
         return f"{self.name}({self.organization.name})"
+    
+    
+    class Meta:
+        verbose_name = "Project"
+        verbose_name_plural = "Projects"
         
 class Task(models.Model):
         STATUS_CHOICES=[

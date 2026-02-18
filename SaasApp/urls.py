@@ -1,6 +1,10 @@
-from .views import ProtectedView
+from rest_framework.routers import DefaultRouter
+from .views import  TaskViewSet, ProjectViewSet
 from django.urls import path
 
-urlpatterns = [
-    path("protected/", ProtectedView.as_view())
-]
+
+router=DefaultRouter()
+router.register("projects",ProjectViewSet,basename='projects')
+router.register('tasks',TaskViewSet,basename='tasks')
+
+urlpatterns = router.urls
