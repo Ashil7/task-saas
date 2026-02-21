@@ -22,7 +22,7 @@ class Organization(models.Model):
 class Membership(models.Model):
     ROLE_CHOICES=(
         ("ADMIN",'admin'),
-        ("MANAGER",'member'),
+        ("MANAGER",'manager'),
         ("MEMBER","member"),
     )
     
