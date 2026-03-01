@@ -116,9 +116,19 @@ class Task(models.Model):
             default='MEDIUM',
         )
         
+        created_by = models.ForeignKey(User, on_delete=models.CASCADE)        
         due_date=models.DateField(blank=True,null=True)
         
         created_at=models.DateTimeField(auto_now_add=True)
+        
+        
+        
+        class Meta:
+            indexes = [
+                models.Index(fields=["project", "status"]),
+                models.Index(fields=["created_by"]),
+                models.Index(fields=["due_date"]),
+            ]
         
         def __str__(self):
             return f"{self.title}({self.project.name})"

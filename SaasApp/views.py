@@ -21,8 +21,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return [IsAuthenticated]
     
     def get_queryset(self):
-        membership=Membership.objects.get(user=self.request.user)
-        return Projects.objects.filter(organization=membership.organization)
+        return Projects.objects.filter(
+            organization__memberships__user=self.request.user
+        ).select_related("organization")
     
     def perform_create(self, serializer):
         membership=Membership.objects.get(user=self.request.user)
@@ -34,8 +35,12 @@ class TaskViewSet(viewsets.ModelViewSet):
     
     
     def get_queryset(self):
-        membership=Membership.objects.get(user=self.request.user)
-        return Task.objects.get(project__organization=membership.organization)
+        return (
+            Task.objects
+            .filter(project__organization__memberships__user=self.request.user)
+            .select_related("project", "created_by")
+            .prefetch_related("assigned_to")
+        )
     
     def perform_create(self, serializer):
         membership = Membership.objects.get(user=self.request.user)
