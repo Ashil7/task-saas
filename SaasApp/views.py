@@ -7,7 +7,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework import viewsets
 from .models import Projects, Task, Membership
 from .serializers import ProjectSerializer,TaskSerializer
-from .permissions import isAdmin
+from .permissions import IsAdmin
 
 
 
@@ -17,7 +17,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     
     def get_permissions(self):
         if self.action in ['create','destroy']:
-            return [isAdmin()]
+            return [IsAdmin()]
         return [IsAuthenticated]
     
     def get_queryset(self):

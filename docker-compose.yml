@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: task_saas
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:8000 taskSaas.wsgi:application
+    environment:
+      DEBUG: True
+      DJANGO_SETTINGS_MODULE: taskSaas.settings.dev
+      POSTGRES_HOST: db
+      POSTGRES_DB: task_saas
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      SECRET_KEY: your-secret-key
+      ALLOWED_HOSTS: localhost,127.0.0.1
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
